@@ -2,6 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 
 \title{Machine learning - Lab2}
 \author{Carlos Alfonso Gómez Hernández}
@@ -31,6 +33,7 @@ test set     & 5     & Taiwan Taiwan Sapporo & ?             \\
 \label{table:13.10}
 \end{center}
 \end{table}
+
 
 \subsection{Estimation - Multinomial Naive Bayes classifier}
 
@@ -81,25 +84,53 @@ There is two classes (China or not China). Each class have 2 documents.
 \[\hat{P}(Taipei|\overline{c}) = \hat{P}(Macao|\overline{c}) = \hat{P}(Shanghai|\overline{c}) = \frac{1}{4} = 0.25\]
 
 
-
-
 \subsection{Applying the classifier to the test document}
 
-Using formula
-
+Using formula and previous values calculated
 
 \begin{equation}
     \begin{aligned}
 \hat{P}(c|doc5) = {} & \hat{P}(c) * \hat{P}(Taiwan|c) *  \hat{P}(Sapporo|c) * (1 - \hat{P}(Osaka|c) ) * (1-\hat{P}(Japan|c) ) \\
-& * (1 - \hat{P}(Shanghai|c) ) * (1-\hat{P}(Macao|c) ) * (1 - \hat{P}(Taipei|c) ) \\ & = \frac{1}{2} * (\frac{1}{4})^2 * \frac{1}{12} \approx 0.0026041666666666665
+& * (1 - \hat{P}(Shanghai|c) ) * (1-\hat{P}(Macao|c) ) * (1 - \hat{P}(Taipei|c) ) \\ & \approx 0.006591796875
  \end{aligned}
 \end{equation}
 
- 
-\[\hat{P}(\overline{c}|doc5)  = \frac{1}{2} * (\frac{1}{6})^2 * \frac{1}{4} \approx 0.003472222222222222\]
+\begin{equation}
+    \begin{aligned}
+\hat{P}(\overline{c}|doc5) = {} & \hat{P}(\overline{c}) * \hat{P}(Taiwan|\overline{c}) *  \hat{P}(Sapporo|\overline{c}) * (1 - \hat{P}(Osaka|\overline{c}) ) * (1-\hat{P}(Japan|\overline{c}) ) \\
+& * (1 - \hat{P}(Shanghai|\overline{c}) ) * (1-\hat{P}(Macao|\overline{c}) ) * (1 - \hat{P}(Taipei|\overline{c}) ) \\ 
+& \approx 0.019775390625
+ \end{aligned}
+\end{equation}
 
 Document in $\overline{c}$
 
 \section{Algorithm}
+
+To modify time complexity of ApplyMultinomialNB, I call a function named SelectDistinctTokens (line 3). This receives has parameter the list of tokens extrated from each document. Then, the conditional probability is only calculated one time for each token (line 6). 
+
+\makeatletter
+    \def\BState{\State\hskip-\ALG@thistlm}
+    \makeatother
+    %this changes the style of the comments 
+
+    \begin{algorithm}
+        \caption{Apply Multinomial NB}\label{euclid}
+        \algblockdefx[Foreach]{Foreach}{EndForeach}[1]{\textbf{foreach} #1 \textbf{do}}{\textbf{end foreach}}
+        
+        \begin{algorithmic}[1]
+            \Procedure{ApplyMultinomialNB}{$C, V, prior, condprob, d$}    
+            \State$W\gets ExtractTokensFromDoc(V,d)$
+            \State$D\gets SelectDistinctTokens(W)$
+				\Foreach{$c \in C$}
+					\State $score[c]\gets log prior[c]$
+					\Foreach {$d \in D$}
+						\State $score[c] += log condprob[d][c]$
+					\EndForeach
+				\EndForeach
+            \State \textbf{return} $arg max_{e \in C}score[c]$\Comment{Naive Bayes algorithm}
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
 
 \end{document}
