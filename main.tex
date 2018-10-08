@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{booktabs}
+\usepackage{amsmath}
 
 \title{Machine learning - Lab2}
 \author{Carlos Alfonso Gómez Hernández}
@@ -87,8 +88,13 @@ There is two classes (China or not China). Each class have 2 documents.
 Using formula
 
 
-\[\hat{P}(c|doc5) = \hat{P}(c) * \hat{P}(Taiwan|c) *  \hat{P}(Sapporo|c) * (1 - \hat{P}(Osaka|c) ) * (1-\hat{P}(Japan|c) )
- * (1 - \hat{P}(Shanghai|c) ) * (1-\hat{P}(Macao|c) ) * (1 - \hat{P}(Taipei|c) ) = \frac{1}{2} * (\frac{1}{4})^2 * \frac{1}{12} \approx 0.0026041666666666665\]
+\begin{equation}
+    \begin{aligned}
+\hat{P}(c|doc5) = {} & \hat{P}(c) * \hat{P}(Taiwan|c) *  \hat{P}(Sapporo|c) * (1 - \hat{P}(Osaka|c) ) * (1-\hat{P}(Japan|c) ) \\
+& * (1 - \hat{P}(Shanghai|c) ) * (1-\hat{P}(Macao|c) ) * (1 - \hat{P}(Taipei|c) ) \\ & = \frac{1}{2} * (\frac{1}{4})^2 * \frac{1}{12} \approx 0.0026041666666666665
+ \end{aligned}
+\end{equation}
+
  
 \[\hat{P}(\overline{c}|doc5)  = \frac{1}{2} * (\frac{1}{6})^2 * \frac{1}{4} \approx 0.003472222222222222\]
 
